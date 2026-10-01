@@ -17,8 +17,8 @@ the PR comment says so; a PR that touches protected paths is never merged and is
 
 Repeat:
 
-1. **Check the usage** with `mcp__ccd_session_mgmt__get_usage` — the `5-hour limit` entry of
-   `plan.windows`.
+1. **Check the usage** with the CLI probe, read as `session-reserve` says under *Checking the
+   usage* (`five_hour.utilization`).
 2. **Run one issue with the `session` skill**, all seven phases.
 3. **Wait for CI**, merge on green — except a PR that touches protected paths, which the owner
    merges.
@@ -49,7 +49,7 @@ maintainer asks; mention in the final report that it is how to resume automatica
 
 ## When the usage cannot be read
 
-If `get_usage` is missing (a cloud session, an older app) or reports `unavailable` or
-`not_applicable`, **do not guess.** Tell the maintainer the usage cannot be read here, and fall back
-to plain `session`: finish the current issue, do not merge unless they confirm, and do not start
+If the probe's answer is unknown (see `session-reserve`, *Checking the usage*), **do not guess** and
+never read it as 0%. Tell the maintainer the usage cannot be read here and why, and fall back to
+plain `session`: finish the current issue, do not merge unless they confirm, and do not start
 another.
