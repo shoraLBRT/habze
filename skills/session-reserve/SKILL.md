@@ -89,9 +89,9 @@ branch.
 - an issue would change protected paths beyond what it asks;
 - the backlog has no issue a coding session may take.
 
-When you stop for a question, comment on the issue with the question, the options and your
-recommendation, add the `needs:maintainer` label (A4), tell the maintainer the same, and leave the
-work in the clean state described above.
+When you stop for a question, add the `needs:maintainer` label, **then** comment on the issue with
+the question, the options and your recommendation (A4 looks for a comment after the label), tell the
+maintainer the same, and leave the work in the clean state described above.
 
 ## Ending
 
