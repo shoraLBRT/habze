@@ -18,7 +18,13 @@ differs between projects lives in each project's own documents. habze holds what
 [Bellboy](https://github.com/shoraLBRT/bellboy), a Telegram assistant that starts and reports agent
 work across projects, relies on it.
 
+## The standard
+
+[`STANDARD.md`](STANDARD.md) — version 1.0 — lists every requirement a project must meet, each with
+the check that verifies it.
+
 ## Status
 
-Specified, not yet written. See [docs/SPEC.md](docs/SPEC.md), [docs/ROADMAP.md](docs/ROADMAP.md) and
-the [board](https://github.com/users/shoraLBRT/projects/5).
+The standard is written; the skills and the adoption tools are not yet. See
+[docs/SPEC.md](docs/SPEC.md), [docs/ROADMAP.md](docs/ROADMAP.md) and the
+[board](https://github.com/users/shoraLBRT/projects/5).

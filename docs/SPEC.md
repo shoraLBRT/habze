@@ -56,7 +56,7 @@ public and meant to be reused.
 
 - **The backlog is the project's GitHub Projects board.** Issues are the source of truth for what
   is done; the board is the source of truth for what is next.
-- Board fields: **Status** (`Todo`, `In progress`, `Done`), **Priority** (`P0`, `P1`, `P2`),
+- Board fields: **Status** (`Todo`, `In Progress`, `Done`), **Priority** (`P0`, `P1`, `P2`),
   **Size** (`XS` … `XL`). The board's built-in workflows close the loop: item closed → Done,
   PR merged → Done.
 - **Stages are milestones**, titled `S0 · <name>`, `S1 · <name>`, … so that title order is stage
