@@ -34,6 +34,9 @@ cp -r skills/session skills/session-reserve skills/session-full ~/.claude/skills
 ```
 
 Copy again after the skills change on `main`; never edit the installed copies.
+`session-reserve` and `session-full` read usage through the `claude` CLI, so it must be logged in on
+that machine (`claude auth status`; `claude auth login` if not) — the desktop app's own login does
+not count.
 
 ## Status
 

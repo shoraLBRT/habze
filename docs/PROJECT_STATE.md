@@ -4,9 +4,9 @@
 in the same pull request as the work it describes.
 
 - **Last updated:** 2026-10-01
-- **Current stage:** S0 · The standard — `STANDARD.md` 1.0 and the `docs` CI check exist; the labels
-  file, issue forms and PR template (#2) wait for the owner's merge (protected paths, P6), and the
-  owner turns on the protection of `main`; see [ROADMAP.md](ROADMAP.md)
+- **Current stage:** S0 · The standard — `STANDARD.md` 1.0, the `docs` CI check, the labels file,
+  issue forms and PR template exist; S0 is done once the owner turns on the protection of `main`.
+  S1's work has started (#4 done, #5 in review); see [ROADMAP.md](ROADMAP.md)
 - **Board:** <https://github.com/users/shoraLBRT/projects/5>
 - **What gets built:** [SPEC.md](SPEC.md)
 
@@ -19,7 +19,7 @@ in the same pull request as the work it describes.
 | Specification | Agreed 2026-10-01 | [`docs/SPEC.md`](SPEC.md) |
 | Roadmap and backlog | 13 issues in stages S0–S2 on the board, with native *blocked by* relations | [`docs/ROADMAP.md`](ROADMAP.md) |
 | `STANDARD.md` | Version 1.0: requirements D1–D8, B1–B8, I1–I6, P1–P6 (repository) and A1–A6, V1–V2 (agents, versions), each with its check | [`STANDARD.md`](../STANDARD.md) |
-| Skills | `session`, `session-reserve`, `session-full`, aligned with `STANDARD.md` 1.0 (eligibility and order query, trust, commit after each phase, own issue only, protected paths never merged by an agent, `claude/<issue>-<slug>`); installed by hand per the README until #8; usage still read with the desktop tool until #5 — #4 | [`skills/`](../skills) |
+| Skills | `session`, `session-reserve`, `session-full`, aligned with `STANDARD.md` 1.0 (eligibility and order query, trust, commit after each phase, own issue only, protected paths never merged by an agent, `claude/<issue>-<slug>`); installed by hand per the README until #8. The looping skills read usage with the CLI probe of SPEC §4 (no desktop tool); a probe without an answer is *unknown* and stops merging and looping — #4, #5 | [`skills/`](../skills) |
 | CI | The `docs` check: Markdown lint and relative link check, on PRs and pushes to `main` — #3 | [`.github/workflows/ci.yml`](../.github/workflows/ci.yml) |
 | Branch protection of `main` | Not yet: the owner turns it on with the `docs` check required — #3 | GitHub settings |
 | Labels | The standard's set exists on habze and bellboy (created by hand on 2026-10-01) and matches the labels file exactly (checked 2026-10-01) | GitHub |
@@ -66,5 +66,9 @@ habze does not yet meet all of `STANDARD.md` 1.0. Known gaps, and where they clo
 - The licence — tracked in [shoraLBRT/bellboy#5](https://github.com/shoraLBRT/bellboy/issues/5) for
   both repositories.
 - **#4's second criterion** — that a local session in a project following the standard picks the
-  task the order rule gives — shows only once the owner has installed the skills from habze and run
-  a session; the issue stays open until then.
+  task the order rule gives — is not yet shown with the skills installed from habze. #4 was closed
+  when #17 was merged (the PR was linked to it), so the check is left to the owner's first session.
+- **The CLI is not logged in on the owner's laptop** (`claude auth status`: `"loggedIn": false`,
+  2026-10-01); the desktop app has its own login. Until `claude auth login` is run there, the probe
+  answers *unknown* and the looping skills behave like plain `session` on that machine. #5's
+  laptop and cloud runs of the probe wait for it.

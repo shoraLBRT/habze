@@ -33,17 +33,32 @@ left, and record the partial state in the project's state file.
 
 ## Checking the usage
 
-Call `mcp__ccd_session_mgmt__get_usage` (load it with ToolSearch if it is deferred). In the result,
-`plan.windows` holds the entry labelled `5-hour limit` with `percentUsed` and `resetsIn`.
+Read the usage with the **CLI probe** — one tiny request, the same command on the owner's machine
+and in a cloud session:
 
-- `percentUsed` **< 80** → start the next issue.
-- `percentUsed` **≥ 80** → do not start one.
-- The tool is **missing** (a cloud session, an older app), or `plan.status` is `unavailable` or
-  `not_applicable`, or there is no 5-hour window → **do not guess.** Tell the maintainer the usage
-  cannot be read here, and fall back to plain `session`: finish the current issue, do not merge
-  unless they confirm, and do not start another.
+```bash
+claude -p "ok" --model haiku --max-turns 1 --output-format stream-json --verbose 2>/dev/null   | grep -m1 '"rate_limit_event"'
+```
 
-The weekly window is not this skill's rule; if it is nearly spent (≥ 95%), mention it when you stop.
+It prints one line of JSON. Read `rate_limit_info.unifiedWindows.five_hour` and `.seven_day`, each
+`{utilization, resetsAt}`: `utilization` is a fraction from 0 to 1 (`0.41` is 41%), `resetsAt` is
+Unix seconds (`date -d @<resetsAt>` shows it as a time).
+
+- `five_hour.utilization` **< 0.80** → start the next issue.
+- `five_hour.utilization` **≥ 0.80** → do not start one.
+- **Unknown** — nothing printed (no `claude` on the PATH, a CLI that is not logged in —
+  `claude auth status` shows `"loggedIn": false` —, no network), a line that does not parse, or a
+  `five_hour.utilization` that is missing or not a number from 0 to 1. Unknown is **never** read as
+  0%. **Do not guess**: tell the maintainer the usage cannot be read here and why, and fall back to
+  plain `session` — finish the current issue, do not merge unless they confirm, and do not start
+  another.
+
+**When to probe.** The probe is a real request: if no 5-hour window is running, it opens one. Run it
+only where this skill says — right before work the session is about to do anyway — and never to wait
+or poll for a reset.
+
+The weekly window (`seven_day`) is not this skill's rule; if it is nearly spent (≥ 0.95), mention it
+when you stop.
 
 ## Merging
 
