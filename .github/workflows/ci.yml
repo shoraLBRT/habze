@@ -1,0 +1,27 @@
+# Runs the checks listed under "Verification" in docs/PROJECT_STATE.md.
+name: CI
+
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  docs:
+    name: docs
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Markdown lint
+        run: npx --yes markdownlint-cli2@0.23.3
+      - name: Link check
+        run: >-
+          git ls-files -z '*.md'
+          | xargs -0 -n1 npx --yes markdown-link-check@3.15.0 -q -c .markdown-link-check.json
