@@ -70,7 +70,8 @@ public and meant to be reused.
   (`Usage probe`, `Move the skills into habze`). The type is a label.
 - **Body:** *Why*, *What*, *Acceptance criteria* (a checklist), *Depends on* when relevant —
   provided as issue forms.
-- **Labels** (the full set is a file in habze; adoption creates it):
+- **Labels** (the full set is [`.github/labels.yml`](../.github/labels.yml) in habze; adoption
+  creates it):
   - kind: `type:feature`, `type:infra`, `type:docs`, `type:research`, `type:qa`, `type:security`,
     `type:tech-debt`, `type:bug`;
   - workflow: `needs:maintainer` (an agent stopped and needs the owner), `accepted` (the owner
@@ -219,3 +220,4 @@ must do; the conformance check checks against the version the project names.
 | Protected paths need the owner | An agent must not weaken CI, its skills or its rules unattended |
 | Usage through the CLI probe | Works on the machine and in the cloud; the desktop tool does not exist in the cloud |
 | Bellboy runs use `session` in run mode | Loops and merges are Bellboy's, so each cloud session stays one task with fresh context |
+| Issue forms, PR template and labels file are copied into each project, not served from the owner's `.github` repository | The standard's checks (I5, I6) read the project's own files, and GitHub ignores the shared forms as soon as a repository has any of its own; a shared repository would also tie habze to one owner and move every project to new forms at once, while each project names the version it follows (V2) |

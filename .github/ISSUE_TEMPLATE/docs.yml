@@ -1,0 +1,41 @@
+# An issue form from habze (STANDARD.md, I4 and I5). The type is the label, not the title.
+name: Documents
+description: "Documents only"
+labels: ["type:docs"]
+body:
+  - type: markdown
+    attributes:
+      value: >-
+        Title the issue with its outcome, as an imperative or a noun phrase, without a type
+        prefix (STANDARD.md, I3).
+  - type: textarea
+    id: why
+    attributes:
+      label: Why
+      description: "Who needs the document, and what they cannot do without it."
+    validations:
+      required: true
+  - type: textarea
+    id: what
+    attributes:
+      label: What
+      description: "Which documents are written or changed, and what they say."
+    validations:
+      required: true
+  - type: textarea
+    id: acceptance-criteria
+    attributes:
+      label: Acceptance criteria
+      description: "A checklist: each line `- [ ] …` is a fact someone can check when the work is done."
+      value: "- [ ] "
+    validations:
+      required: true
+  - type: textarea
+    id: depends-on
+    attributes:
+      label: Depends on
+      description: >-
+        The issues that must be closed first, as `#N`, or leave empty. Also add each one as a
+        *blocked by* relation on the issue: agents read the relation, not this text (B7).
+    validations:
+      required: false

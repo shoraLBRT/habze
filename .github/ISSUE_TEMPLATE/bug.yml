@@ -1,0 +1,41 @@
+# An issue form from habze (STANDARD.md, I4 and I5). The type is the label, not the title.
+name: Bug
+description: "Something does not work as specified"
+labels: ["type:bug"]
+body:
+  - type: markdown
+    attributes:
+      value: >-
+        Title the issue with its outcome, as an imperative or a noun phrase, without a type
+        prefix (STANDARD.md, I3).
+  - type: textarea
+    id: why
+    attributes:
+      label: Why
+      description: "What does not work: what you did, what you expected (and where it is specified), what happened."
+    validations:
+      required: true
+  - type: textarea
+    id: what
+    attributes:
+      label: What
+      description: "What the fix changes."
+    validations:
+      required: true
+  - type: textarea
+    id: acceptance-criteria
+    attributes:
+      label: Acceptance criteria
+      description: "A checklist, including a test that fails before the fix and passes after it."
+      value: "- [ ] "
+    validations:
+      required: true
+  - type: textarea
+    id: depends-on
+    attributes:
+      label: Depends on
+      description: >-
+        The issues that must be closed first, as `#N`, or leave empty. Also add each one as a
+        *blocked by* relation on the issue: agents read the relation, not this text (B7).
+    validations:
+      required: false
