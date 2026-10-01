@@ -3,7 +3,7 @@
 **The living state of the project: what exists, what is next, and how to verify a change.** Update it
 in the same pull request as the work it describes.
 
-- **Last updated:** 2026-10-01
+- **Last updated:** 2026-10-02
 - **Current stage:** S0 · The standard — `STANDARD.md` 1.0, the `docs` CI check, the labels file,
   issue forms and PR template exist; S0 is done once the owner turns on the protection of `main`.
   S1's work has started (#4 done; #5 merged but partial, waiting on the CLI login below); see
@@ -49,16 +49,13 @@ the result.
 
 ## habze against its own standard
 
-`bash tools/conformance.sh shoraLBRT/habze` on 2026-10-01: 26 passed, 3 failed:
+`bash tools/conformance.sh shoraLBRT/habze` on 2026-10-02: 27 passed, 2 failed:
 
-- **D2** — `CLAUDE.md` lacks the line ``This project follows [habze](…) `1.0`.``; #20 adds it and
-  makes the skills add `needs:maintainer` before the stop comment (A4). Both are protected paths,
-  so #20 waits for the owner's merge.
 - **P1, P2** — `main` is not protected; P2 has no required checks to match until it is.
 
-Fixed on GitHub for #10: #7 retitled without `Spike:` (I3), and commented on after its label (A4).
-Once #20 is merged and `main` is protected, #10's last criterion (*passes on habze*) can be shown
-and #10 closed.
+Fixed for #10: #7 retitled without `Spike:` (I3) and commented on after its label (A4); #20 added
+`CLAUDE.md`'s version line (D2) and made the skills add `needs:maintainer` before the stop comment.
+Once the owner protects `main`, #10's last criterion (*passes on habze*) can be shown and #10 closed.
 
 ## Open questions for the owner
 
