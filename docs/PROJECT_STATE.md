@@ -52,12 +52,12 @@ habze does not yet meet all of `STANDARD.md` 1.0. Known gaps, and where they clo
 
 ## Open questions for the owner
 
-- **#4's second criterion** — that a local session in a project following the standard picks the
-  task the order rule gives — shows only once the owner has installed the skills from habze and run
-  a session; the issue stays open until then.
 - **Organisation-owned repositories.** The standard defines *the owner* as the account that owns the
   repository (eligibility A1, protected paths P6). For a repository owned by an organisation that
   is the organisation itself, which never opens issues; a later version needs a way to name the
   maintainers (for example in `AGENTS.md`).
 - The licence — tracked in [shoraLBRT/bellboy#5](https://github.com/shoraLBRT/bellboy/issues/5) for
   both repositories.
+- **#4's second criterion** — that a local session in a project following the standard picks the
+  task the order rule gives — shows only once the owner has installed the skills from habze and run
+  a session; the issue stays open until then.
