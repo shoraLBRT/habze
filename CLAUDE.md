@@ -9,3 +9,5 @@ tools to adopt them.
 [docs/PROJECT_STATE.md](docs/PROJECT_STATE.md) says what exists and how to verify a change.
 
 See [AGENTS.md](AGENTS.md) for how to work in this repository.
+
+This project follows [habze](https://github.com/shoraLBRT/habze) `1.0`.
