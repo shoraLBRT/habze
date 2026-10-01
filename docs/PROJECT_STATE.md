@@ -6,7 +6,8 @@ in the same pull request as the work it describes.
 - **Last updated:** 2026-10-01
 - **Current stage:** S0 · The standard — `STANDARD.md` 1.0, the `docs` CI check, the labels file,
   issue forms and PR template exist; S0 is done once the owner turns on the protection of `main`.
-  S1's work has started (#4 done, #5 in review); see [ROADMAP.md](ROADMAP.md)
+  S1's work has started (#4 done; #5 merged but partial, waiting on the CLI login below); see
+  [ROADMAP.md](ROADMAP.md)
 - **Board:** <https://github.com/users/shoraLBRT/projects/5>
 - **What gets built:** [SPEC.md](SPEC.md)
 
@@ -48,15 +49,16 @@ the result.
 
 ## habze against its own standard
 
-`bash tools/conformance.sh shoraLBRT/habze` on 2026-10-01: 24 passed, 5 failed:
+`bash tools/conformance.sh shoraLBRT/habze` on 2026-10-01: 26 passed, 3 failed:
 
-- **D2** — `CLAUDE.md` lacks the line ``This project follows [habze](…) `1.0`.``; `CLAUDE.md` is a
-  protected path, so the owner adds it (or approves a PR that does).
+- **D2** — `CLAUDE.md` lacks the line ``This project follows [habze](…) `1.0`.``; #20 adds it and
+  makes the skills add `needs:maintainer` before the stop comment (A4). Both are protected paths,
+  so #20 waits for the owner's merge.
 - **P1, P2** — `main` is not protected; P2 has no required checks to match until it is.
-- **I3** — #7's title starts with `Spike:`, which the type-prefix rule flags; the type is already its
-  `type:research` label.
-- **A4** — #7 got its `needs:maintainer` comment *before* the label; the check wants one after.
-  The skills should say: add the label, then comment.
+
+Fixed on GitHub for #10: #7 retitled without `Spike:` (I3), and commented on after its label (A4).
+Once #20 is merged and `main` is protected, #10's last criterion (*passes on habze*) can be shown
+and #10 closed.
 
 ## Open questions for the owner
 

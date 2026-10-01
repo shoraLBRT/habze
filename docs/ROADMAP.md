@@ -44,7 +44,7 @@ habze S0–S1 alongside Bellboy S0–S1.
 | [#4](https://github.com/shoraLBRT/habze/issues/4) | Move the session skills into habze | P0 | #1 |
 | [#5](https://github.com/shoraLBRT/habze/issues/5) | Usage probe in the skills | P0 | #4 |
 | [#6](https://github.com/shoraLBRT/habze/issues/6) | Run mode for Bellboy | P0 | #4, #5 |
-| [#7](https://github.com/shoraLBRT/habze/issues/7) | Spike: do cloud sessions load a plugin enabled in the repository? | P0 | #4 |
+| [#7](https://github.com/shoraLBRT/habze/issues/7) | Do cloud sessions load a plugin enabled in the repository? | P0 | #4 |
 | [#8](https://github.com/shoraLBRT/habze/issues/8) | Deliver the skills to projects | P0 | #7 |
 | [#9](https://github.com/shoraLBRT/habze/issues/9) | Routine guide | P0 | #6 |
 
