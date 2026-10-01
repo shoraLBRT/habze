@@ -1,0 +1,24 @@
+# habze
+
+*Habze* is the unwritten code of conduct of the Circassians. This is its counterpart for software
+projects built by Claude Code agents: **one way of working, the same in every project.**
+
+The work is the same everywhere — update the default branch, take the next task from the backlog,
+branch, build, verify, open a PR, merge when allowed, record the state, take the next one. What
+differs between projects lives in each project's own documents. habze holds what does not:
+
+- **The standard** — what every project must have: its documents, a GitHub Projects backlog with
+  stages and dependencies, issue and PR rules, required CI on a protected `main`, which issues an
+  agent may take and in what order.
+- **The skills** — `session`, `session-reserve`, `session-full` — the same on your machine and in
+  Anthropic's cloud.
+- **The adoption tools** — a check that says whether a repository follows the standard, a skill that
+  brings it there, and a guide to give a project its cloud routine.
+
+[Bellboy](https://github.com/shoraLBRT/bellboy), a Telegram assistant that starts and reports agent
+work across projects, relies on it.
+
+## Status
+
+Specified, not yet written. See [docs/SPEC.md](docs/SPEC.md), [docs/ROADMAP.md](docs/ROADMAP.md) and
+the [board](https://github.com/users/shoraLBRT/projects/5).
