@@ -1,0 +1,37 @@
+# The labels every project following the habze standard has (STANDARD.md, I1).
+# Adoption creates them in a project; a project may add its own `epic:*` labels.
+# One entry per label; `color` is six hex digits without `#`, quoted so YAML reads it as text.
+
+# Kinds: every open issue in a milestone has exactly one (I2).
+- name: type:feature
+  color: "1D76DB"
+  description: Behaviour the product gains
+- name: type:infra
+  color: "5319E7"
+  description: Build, CI, hosting, tooling
+- name: type:docs
+  color: "0E8A16"
+  description: Documents only
+- name: type:research
+  color: "C5DEF5"
+  description: "A spike: verify facts before code depends on them"
+- name: type:qa
+  color: "FBCA04"
+  description: Tests and verification
+- name: type:security
+  color: "B60205"
+  description: Security work
+- name: type:tech-debt
+  color: "FEF2C0"
+  description: Paying back shortcuts
+- name: type:bug
+  color: "D73A4A"
+  description: Something does not work as specified
+
+# Workflow (A1, A4).
+- name: needs:maintainer
+  color: "D93F0B"
+  description: "An agent stopped here: the owner must decide or act"
+- name: accepted
+  color: "0E8A16"
+  description: The owner admits an issue someone else opened

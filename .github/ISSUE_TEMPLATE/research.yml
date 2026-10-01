@@ -1,0 +1,41 @@
+# An issue form from habze (STANDARD.md, I4 and I5). The type is the label, not the title.
+name: Research
+description: "A spike: verify facts before code depends on them"
+labels: ["type:research"]
+body:
+  - type: markdown
+    attributes:
+      value: >-
+        Title the issue with its outcome, as an imperative or a noun phrase, without a type
+        prefix (STANDARD.md, I3).
+  - type: textarea
+    id: why
+    attributes:
+      label: Why
+      description: "Which decision or which code depends on the answer."
+    validations:
+      required: true
+  - type: textarea
+    id: what
+    attributes:
+      label: What
+      description: "The questions the spike answers, and how it will find out."
+    validations:
+      required: true
+  - type: textarea
+    id: acceptance-criteria
+    attributes:
+      label: Acceptance criteria
+      description: "A checklist of the questions answered and where the answers are recorded."
+      value: "- [ ] "
+    validations:
+      required: true
+  - type: textarea
+    id: depends-on
+    attributes:
+      label: Depends on
+      description: >-
+        The issues that must be closed first, as `#N`, or leave empty. Also add each one as a
+        *blocked by* relation on the issue: agents read the relation, not this text (B7).
+    validations:
+      required: false

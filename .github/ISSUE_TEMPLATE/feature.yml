@@ -1,0 +1,41 @@
+# An issue form from habze (STANDARD.md, I4 and I5). The type is the label, not the title.
+name: Feature
+description: "Behaviour the product gains"
+labels: ["type:feature"]
+body:
+  - type: markdown
+    attributes:
+      value: >-
+        Title the issue with its outcome, as an imperative or a noun phrase, without a type
+        prefix (STANDARD.md, I3).
+  - type: textarea
+    id: why
+    attributes:
+      label: Why
+      description: "The problem or the need, and who has it."
+    validations:
+      required: true
+  - type: textarea
+    id: what
+    attributes:
+      label: What
+      description: "What the product will do; what is out of scope."
+    validations:
+      required: true
+  - type: textarea
+    id: acceptance-criteria
+    attributes:
+      label: Acceptance criteria
+      description: "A checklist: each line `- [ ] …` is a fact someone can check when the work is done."
+      value: "- [ ] "
+    validations:
+      required: true
+  - type: textarea
+    id: depends-on
+    attributes:
+      label: Depends on
+      description: >-
+        The issues that must be closed first, as `#N`, or leave empty. Also add each one as a
+        *blocked by* relation on the issue: agents read the relation, not this text (B7).
+    validations:
+      required: false
