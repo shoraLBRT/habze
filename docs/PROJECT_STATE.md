@@ -22,6 +22,7 @@ in the same pull request as the work it describes.
 | Skills | `session`, `session-reserve`, `session-full`, aligned with `STANDARD.md` 1.0 (eligibility and order query, trust, commit after each phase, own issue only, protected paths never merged by an agent, `claude/<issue>-<slug>`); installed by hand per the README until #8; usage still read with the desktop tool until #5 — #4 | [`skills/`](../skills) |
 | CI | The `docs` check: Markdown lint and relative link check, on PRs and pushes to `main` — #3 | [`.github/workflows/ci.yml`](../.github/workflows/ci.yml) |
 | Branch protection of `main` | Not yet: the owner turns it on with the `docs` check required — #3 | GitHub settings |
+| Conformance check | Every requirement of `STANDARD.md` 1.0 checked or listed as manual (A3), with a fix per failure; exit 1 on failure — #10 | [`tools/conformance.sh`](../tools/conformance.sh) |
 | Labels | The standard's set exists on habze and bellboy (created by hand on 2026-10-01) and matches the labels file exactly (checked 2026-10-01) | GitHub |
 | Labels file, issue forms, PR template | The ten labels of I1 with colours and descriptions; forms for feature, infra, docs, research and bug, each with *Why*, *What*, *Acceptance criteria*, *Depends on* and its `type:*` label; the PR template — #2 | [`.github/labels.yml`](../.github/labels.yml), [`.github/ISSUE_TEMPLATE/`](../.github/ISSUE_TEMPLATE), [`.github/pull_request_template.md`](../.github/pull_request_template.md) |
 
@@ -34,22 +35,28 @@ Bash); CI runs the same commands as the `docs` check
 ```bash
 npx --yes markdownlint-cli2@0.23.3
 git ls-files -z '*.md' | xargs -0 -n1 npx --yes markdown-link-check@3.15.0 -q -c .markdown-link-check.json
+bash -n tools/conformance.sh  # local only
 ```
 
 The first lints every Markdown file with [`.markdownlint-cli2.jsonc`](../.markdownlint-cli2.jsonc)
 (prose wraps at 100 columns). The second checks every relative link and anchor in tracked Markdown
-files; external links are not checked, so a flaky site cannot fail CI.
+files; external links are not checked, so a flaky site cannot fail CI. The third checks the
+conformance check's syntax; it is local only until CI runs it (a workflow change, which the owner
+makes). A change to the conformance check is also run against habze and against a repository that
+does not follow the standard (`bash tools/conformance.sh octocat/Hello-World`), and the PR shows
+the result.
 
 ## habze against its own standard
 
-habze does not yet meet all of `STANDARD.md` 1.0. Known gaps, and where they close:
+`bash tools/conformance.sh shoraLBRT/habze` on 2026-10-01: 24 passed, 5 failed:
 
 - **D2** — `CLAUDE.md` lacks the line ``This project follows [habze](…) `1.0`.``; `CLAUDE.md` is a
   protected path, so the owner adds it (or approves a PR that does).
-- **D7, P1–P3** — no verification commands, CI or protection yet: #3.
-- **I5, I6** — close when #2 is merged.
+- **P1, P2** — `main` is not protected; P2 has no required checks to match until it is.
 - **I3** — #7's title starts with `Spike:`, which the type-prefix rule flags; the type is already its
   `type:research` label.
+- **A4** — #7 got its `needs:maintainer` comment *before* the label; the check wants one after.
+  The skills should say: add the label, then comment.
 
 ## Open questions for the owner
 
