@@ -1,0 +1,10 @@
+// Markdown lint for habze's documents and skills; CI runs it (.github/workflows/ci.yml).
+{
+  "config": {
+    "default": true,
+    // Prose wraps at 100; tables, code and headings may run longer.
+    "MD013": { "line_length": 100, "tables": false, "code_blocks": false, "headings": false }
+  },
+  "globs": ["**/*.md"],
+  "ignores": ["node_modules/**", ".claude/**"]
+}

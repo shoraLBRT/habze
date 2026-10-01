@@ -19,12 +19,24 @@ in the same pull request as the work it describes.
 | Roadmap and backlog | 13 issues in stages S0–S2 on the board, with native *blocked by* relations | [`docs/ROADMAP.md`](ROADMAP.md) |
 | `STANDARD.md` | Version 1.0: requirements D1–D8, B1–B8, I1–I6, P1–P6 (repository) and A1–A6, V1–V2 (agents, versions), each with its check | [`STANDARD.md`](../STANDARD.md) |
 | Skills | Still only in the owner's `~/.claude/skills` — #4 | — |
-| CI, branch protection | Not yet — #3 | — |
+| CI | The `docs` check: Markdown lint and relative link check, on PRs and pushes to `main` — #3 | [`.github/workflows/ci.yml`](../.github/workflows/ci.yml) |
+| Branch protection of `main` | Not yet: the owner turns it on with the `docs` check required — #3 | GitHub settings |
 | Labels | The standard's set exists on habze and bellboy (created by hand on 2026-10-01) | GitHub |
 
 ## Verification
 
-No CI yet (#3). A change is documents and skills; check Markdown renders and links resolve.
+A change is documents and skills. Run from the repository root (Node.js with `npx`; on Windows, Git
+Bash); CI runs the same commands as the `docs` check
+([`.github/workflows/ci.yml`](../.github/workflows/ci.yml)):
+
+```bash
+npx --yes markdownlint-cli2@0.23.3
+git ls-files -z '*.md' | xargs -0 -n1 npx --yes markdown-link-check@3.15.0 -q -c .markdown-link-check.json
+```
+
+The first lints every Markdown file with [`.markdownlint-cli2.jsonc`](../.markdownlint-cli2.jsonc)
+(prose wraps at 100 columns). The second checks every relative link and anchor in tracked Markdown
+files; external links are not checked, so a flaky site cannot fail CI.
 
 ## habze against its own standard
 
