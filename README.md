@@ -35,9 +35,24 @@ cp -r skills/session skills/session-reserve skills/session-full ~/.claude/skills
 
 Copy again after the skills change on `main`; never edit the installed copies.
 
+## The conformance check
+
+[`tools/conformance.sh`](tools/conformance.sh) says whether one repository follows the standard. It
+checks every requirement of `STANDARD.md`, prints a line for each with the fix for each failure, and
+exits non-zero when any fails:
+
+```bash
+bash tools/conformance.sh owner/name
+```
+
+It needs only `gh`, logged in with the `repo` and `read:project` scopes (`gh auth refresh -s
+read:project`), and runs in bash on Linux and in Git Bash on Windows. It checks a project against
+the version of the standard its `CLAUDE.md` names. A3 (whose words an agent obeys) is reviewed by
+hand; A1 and A2 print the eligible issues in order, the first being the next task.
+
 ## Status
 
-The standard is written and the skills are in habze; delivering them to projects and the adoption
-tools are not done yet. See
+The standard is written, the skills are in habze, and the conformance check exists; delivering the
+skills to projects and the `adopt-standard` skill are not done yet. See
 [docs/SPEC.md](docs/SPEC.md), [docs/ROADMAP.md](docs/ROADMAP.md) and the
 [board](https://github.com/users/shoraLBRT/projects/5).
