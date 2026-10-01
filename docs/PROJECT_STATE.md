@@ -19,7 +19,7 @@ in the same pull request as the work it describes.
 | Specification | Agreed 2026-10-01 | [`docs/SPEC.md`](SPEC.md) |
 | Roadmap and backlog | 13 issues in stages S0–S2 on the board, with native *blocked by* relations | [`docs/ROADMAP.md`](ROADMAP.md) |
 | `STANDARD.md` | Version 1.0: requirements D1–D8, B1–B8, I1–I6, P1–P6 (repository) and A1–A6, V1–V2 (agents, versions), each with its check | [`STANDARD.md`](../STANDARD.md) |
-| Skills | Still only in the owner's `~/.claude/skills` — #4 | — |
+| Skills | `session`, `session-reserve`, `session-full`, aligned with `STANDARD.md` 1.0 (eligibility and order query, trust, commit after each phase, own issue only, protected paths never merged by an agent, `claude/<issue>-<slug>`); installed by hand per the README until #8; usage still read with the desktop tool until #5 — #4 | [`skills/`](../skills) |
 | CI | The `docs` check: Markdown lint and relative link check, on PRs and pushes to `main` — #3 | [`.github/workflows/ci.yml`](../.github/workflows/ci.yml) |
 | Branch protection of `main` | Not yet: the owner turns it on with the `docs` check required — #3 | GitHub settings |
 | Labels | The standard's set exists on habze and bellboy (created by hand on 2026-10-01) and matches the labels file exactly (checked 2026-10-01) | GitHub |
@@ -65,3 +65,6 @@ habze does not yet meet all of `STANDARD.md` 1.0. Known gaps, and where they clo
   maintainers (for example in `AGENTS.md`).
 - The licence — tracked in [shoraLBRT/bellboy#5](https://github.com/shoraLBRT/bellboy/issues/5) for
   both repositories.
+- **#4's second criterion** — that a local session in a project following the standard picks the
+  task the order rule gives — shows only once the owner has installed the skills from habze and run
+  a session; the issue stays open until then.

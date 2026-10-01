@@ -23,8 +23,21 @@ work across projects, relies on it.
 [`STANDARD.md`](STANDARD.md) — version 1.0 — lists every requirement a project must meet, each with
 the check that verifies it.
 
+## The skills
+
+[`skills/`](skills) holds `session`, `session-reserve` and `session-full`. habze is the only place
+they are edited. Until they are delivered to projects through the repository, install them on your
+machine by copying them over your user skills, from the root of a current checkout of habze:
+
+```bash
+cp -r skills/session skills/session-reserve skills/session-full ~/.claude/skills/
+```
+
+Copy again after the skills change on `main`; never edit the installed copies.
+
 ## Status
 
-The standard is written; the skills and the adoption tools are not yet. See
+The standard is written and the skills are in habze; delivering them to projects and the adoption
+tools are not done yet. See
 [docs/SPEC.md](docs/SPEC.md), [docs/ROADMAP.md](docs/ROADMAP.md) and the
 [board](https://github.com/users/shoraLBRT/projects/5).
