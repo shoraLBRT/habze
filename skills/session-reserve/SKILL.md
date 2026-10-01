@@ -17,9 +17,13 @@ Repeat:
    issue — go to *Ending*.
 2. **Run one issue with the `session` skill**, all seven phases, exactly as it says. Its stop
    conditions stay in force.
-3. **Wait for CI** on the PR (`gh pr checks <N> --watch`), then merge it (see *Merging*).
+3. **Wait for CI** on the PR (`gh pr checks <N> --watch`), then merge it (see *Merging*) — unless
+   it touches protected paths, which the owner merges.
 4. `git fetch origin` and start again from the default branch — the next issue builds on what was
    just merged.
+
+A PR left for the owner's merge is not on the default branch yet. Take a next issue only if it does
+not build on that PR; if the next issue in order needs it, end the loop and say so.
 
 The 80% check happens **before each new issue**, not in the middle of one. An issue already under
 way is finished — through verify, ship, merge and record — even if the window crosses 80% meanwhile.
@@ -46,8 +50,11 @@ The weekly window is not this skill's rule; if it is nearly spent (≥ 95%), men
 Merge your own PR with the project's usual merge method (look at how recent PRs were merged; default
 `gh pr merge <N> --merge --delete-branch`) when:
 
-- every CI check is green, and
-- the PR says honestly what landed and what did not, and `Closes #N` is used only for finished work.
+- every CI check is green,
+- the PR says honestly what landed and what did not, and `Closes #N` is used only for its own,
+  finished issue (P4, A5), and
+- it touches **no protected path** (see `session`, *Rules for every phase*; STANDARD A6, P6). A PR
+  that does is left open for the owner: say so in the PR and the issue, and go on with the loop.
 
 **Red CI is not merged.** Fix it. The only exception: every failing check is proven unrelated to
 this PR *and* already failing on the default branch before it (show the same failure on the default
@@ -64,13 +71,16 @@ branch.
 - a problem needs the maintainer's hands — credentials, an account, a paid service, a broken
   environment you cannot repair;
 - CI is red and you cannot fix it or prove it unrelated;
+- an issue would change protected paths beyond what it asks;
 - the backlog has no issue a coding session may take.
 
-When you stop for a question, give the options and your recommendation, and leave the work in the
-clean state described above.
+When you stop for a question, comment on the issue with the question, the options and your
+recommendation, add the `needs:maintainer` label (A4), tell the maintainer the same, and leave the
+work in the clean state described above.
 
 ## Ending
 
 When the loop ends — reserve reached, a stop condition, or an empty backlog — report in a few lines:
-the PRs merged (with links), anything left open or partial and why, the usage at the stop and when
+the PRs merged (with links), the PRs waiting for the owner's merge, anything left open or partial
+and why, the usage at the stop and when
 the window resets, and what the next issue is.

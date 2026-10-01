@@ -8,10 +8,10 @@ description: Work through the current project's backlog issue after issue with t
 The same loop as `session-reserve`, without the reserve: the maintainer has given this run the whole
 5-hour window. The mandate lasts for this invocation only.
 
-Read `session-reserve` (in the user skills directory, `~/.claude/skills/session-reserve/SKILL.md`)
-for **Merging**, **Stop and ask the maintainer when** and **Ending** — they apply here unchanged,
-including: red CI is never merged unless every failure is proven unrelated and already failing on
-the default branch, and the PR comment says so.
+Read the `session-reserve` skill (`../session-reserve/SKILL.md`, next to this one) for **Merging**,
+**Stop and ask the maintainer when** and **Ending** — they apply here unchanged, including: red CI is
+never merged unless every failure is proven unrelated and already failing on the default branch, and
+the PR comment says so; a PR that touches protected paths is never merged and is left for the owner.
 
 ## The loop
 
@@ -20,7 +20,8 @@ Repeat:
 1. **Check the usage** with `mcp__ccd_session_mgmt__get_usage` — the `5-hour limit` entry of
    `plan.windows`.
 2. **Run one issue with the `session` skill**, all seven phases.
-3. **Wait for CI**, merge on green.
+3. **Wait for CI**, merge on green — except a PR that touches protected paths, which the owner
+   merges.
 4. `git fetch origin` and take the next issue.
 
 Check the usage again **between phases** of a long issue (after Build, after Verify), not only
@@ -32,7 +33,7 @@ The aim is that the window never runs out on dirty work. From about **90% used**
 remaining issue is large:
 
 - do not start a new issue you cannot plausibly finish;
-- bring the current one to a clean point: commit and push the branch (WIP commits are fine), open or
+- bring the current one to a clean point: push the branch (every phase is already committed), open or
   update a **draft** PR, comment on the issue with what is done and exactly what is left, and record
   the partial state in the project's state file on that branch;
 - nothing may exist only in the working tree.
