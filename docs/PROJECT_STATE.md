@@ -3,12 +3,10 @@
 **The living state of the project: what exists, what is next, and how to verify a change.** Update it
 in the same pull request as the work it describes.
 
-- **Last updated:** 2026-10-02
+- **Last updated:** 2026-10-03
 - **Current stage:** S0 · The standard — `STANDARD.md` 1.0, the `docs` CI check, the labels file,
   issue forms and PR template exist; S0 is done once the owner turns on the protection of `main`.
-  S1's work has started (#4 done; #5 merged but partial: the probe works on the laptop, a cloud
-  run is still to be shown — see the open questions); see
-  [ROADMAP.md](ROADMAP.md)
+  S1's work has started (#4 and #5 done; #6 is next); see [ROADMAP.md](ROADMAP.md)
 - **Board:** <https://github.com/users/shoraLBRT/projects/5>
 - **What gets built:** [SPEC.md](SPEC.md)
 
@@ -75,8 +73,10 @@ Once the owner protects `main`, #10's last criterion (*passes on habze*) can be 
 - **#4's second criterion** — that a local session in a project following the standard picks the
   task the order rule gives — is not yet shown with the skills installed from habze. #4 was closed
   when #17 was merged (the PR was linked to it), so the check is left to the owner's first session.
-- **#5's cloud run of the probe.** The CLI on the owner's laptop is logged in (`claude auth
-  status`: `"loggedIn": true`, 2026-10-02), and the probe there printed a `rate_limit_event` with
-  `five_hour.utilization` 0.07 and `seven_day` 0.21, matching the desktop app's usage card (6%,
-  same reset time). Left for #5: the same probe in a cloud session, which needs the owner to start
-  one (or to allow a routine to start it); #6 and #9 wait for #5.
+- **The probe in a cloud session is not shown yet.** On the laptop it works (2026-10-02: a
+  `rate_limit_event` with `five_hour.utilization` 0.07, matching the desktop app's usage card). The
+  owner closed #5 on that evidence (2026-10-03, option C); the first cloud session with the skills
+  (#7, #8) shows whether the probe answers there.
+- **Exceptions to protected paths.** habze has one, in [`AGENTS.md`](../AGENTS.md): an agent
+  allowed to merge also merges changes to its documents and skills. The standard has no way for a
+  project to declare such an exception; a later version may need one.
