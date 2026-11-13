@@ -1,0 +1,104 @@
+# Reusable: the pull request title must be a Conventional Commit (STANDARD.md). With squash-only
+# merges the title becomes the commit on the default branch, so this is the check that matters.
+#
+# Caller: `uses: shoraLBRT/habze/.github/workflows/pr-title.yml@v1`, triggered by `pull_request`
+# (opened, edited, synchronize, reopened) and `workflow_dispatch`. On `workflow_dispatch` (how the
+# release workflow runs checks on release-please's PR) it checks the open PR of the current branch.
+name: PR title
+
+on:
+  workflow_call:
+    inputs:
+      types:
+        description: Allowed commit types, one per line.
+        type: string
+        required: false
+        default: |
+          feat
+          fix
+          perf
+          docs
+          style
+          refactor
+          test
+          build
+          ci
+          chore
+          revert
+      max-length:
+        description: Maximum length of the title, in characters.
+        type: number
+        required: false
+        default: 100
+
+permissions:
+  pull-requests: read
+
+jobs:
+  check:
+    name: check
+    runs-on: ubuntu-latest
+    permissions:
+      pull-requests: read
+    steps:
+      - name: Find the pull request title
+        id: title
+        env:
+          GH_TOKEN: ${{ github.token }}
+          EVENT: ${{ github.event_name }}
+          PR_TITLE: ${{ github.event.pull_request.title }}
+          BRANCH: ${{ github.ref_name }}
+          REPO: ${{ github.repository }}
+        run: |
+          case "$EVENT" in
+            pull_request|pull_request_target) title="$PR_TITLE" ;;
+            *) title="$(gh pr list --repo "$REPO" --head "$BRANCH" --state open \
+                 --json title --jq '.[0].title // ""')" ;;
+          esac
+          if [ -z "$title" ]; then
+            echo "::notice::No open pull request for branch '$BRANCH'; nothing to check."
+            echo "found=false" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          echo "Title: $title"
+          {
+            echo "found=true"
+            echo "title<<HABZE_TITLE_EOF"
+            echo "$title"
+            echo "HABZE_TITLE_EOF"
+          } >> "$GITHUB_OUTPUT"
+
+      - name: Conventional Commits
+        if: github.event_name == 'pull_request' || github.event_name == 'pull_request_target'
+        uses: amannn/action-semantic-pull-request@v6
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        with:
+          types: ${{ inputs.types }}
+
+      - name: habze rules (allowed type, English, length)
+        if: steps.title.outputs.found == 'true'
+        env:
+          TITLE: ${{ steps.title.outputs.title }}
+          TYPES: ${{ inputs.types }}
+          MAX: ${{ inputs.max-length }}
+        run: |
+          export LC_ALL=C.UTF-8
+          types="$(printf '%s' "$TYPES" | tr -s ' \t\r\n' '|' | sed 's/^|//; s/|$//')"
+          re="^(${types})(\([^()[:space:]][^()]*\))?!?: [^[:space:]].*$"
+          fail=0
+          if ! [[ "$TITLE" =~ $re ]]; then
+            echo "::error::PR title must be '<type>[(scope)][!]: <description>' with type one of: ${types//|/, }"
+            fail=1
+          fi
+          if printf '%s' "$TITLE" | grep -qP '[\x{0400}-\x{052F}]'; then
+            echo "::error::PR title contains Cyrillic; write it in English."
+            fail=1
+          fi
+          length="$(printf '%s' "$TITLE" | wc -m)"
+          if [ "$length" -gt "$MAX" ]; then
+            echo "::error::PR title is $length characters; the limit is $MAX."
+            fail=1
+          fi
+          if [ "$fail" -eq 0 ]; then echo "PR title OK: $TITLE"; fi
+          exit "$fail"

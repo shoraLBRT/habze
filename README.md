@@ -1,61 +1,53 @@
 # habze
 
-*Habze* is the unwritten code of conduct of the Circassians. This is its counterpart for software
-projects built by Claude Code agents: **one way of working, the same in every project.**
+One standard, and the shared CI that enforces it, for **commit conventions and versioning**
+across my projects (mostly .NET solutions, one Vite/TypeScript app).
 
-The work is the same everywhere — update the default branch, take the next task from the backlog,
-branch, build, verify, open a PR, merge when allowed, record the state, take the next one. What
-differs between projects lives in each project's own documents. habze holds what does not:
+The rules are in [STANDARD.md](STANDARD.md): Conventional Commits, squash merge with the PR title
+as the commit, SemVer computed by release-please, dependency updates by Renovate.
 
-- **The standard** — what every project must have: its documents, a GitHub Projects backlog with
-  stages and dependencies, issue and PR rules, required CI on a protected `main`, which issues an
-  agent may take and in what order.
-- **The skills** — `session`, `session-reserve`, `session-full` — the same on your machine and in
-  Anthropic's cloud.
-- **The adoption tools** — a check that says whether a repository follows the standard, a skill that
-  brings it there, and a guide to give a project its cloud routine.
+## How projects use it
 
-[Bellboy](https://github.com/shoraLBRT/bellboy), a Telegram assistant that starts and reports agent
-work across projects, relies on it.
+1. **As live references, like a library.** A project calls habze's reusable workflows and extends
+   its Renovate preset at the floating tag `v1`:
 
-## The standard
+   ```yaml
+   jobs:
+     pr-title:
+       uses: shoraLBRT/habze/.github/workflows/pr-title.yml@v1
+   ```
 
-[`STANDARD.md`](STANDARD.md) — version 1.0 — lists every requirement a project must meet, each with
-the check that verifies it.
+   ```json
+   { "extends": ["github>shoraLBRT/habze//renovate/default#v1"] }
+   ```
 
-## The skills
+   | What | File | Does |
+   | --- | --- | --- |
+   | Reusable workflow | [`.github/workflows/pr-title.yml`](.github/workflows/pr-title.yml) | checks the PR title is a Conventional Commit |
+   | Reusable workflow | [`.github/workflows/release.yml`](.github/workflows/release.yml) | release-please: Release PR, tag, GitHub Release; runs the required checks on the Release PR |
+   | Renovate preset | [`renovate/default.json`](renovate/default.json) | semantic dependency PRs; automerge except majors and 0.x |
 
-[`skills/`](skills) holds `session`, `session-reserve` and `session-full`. habze is the only place
-they are edited. Until they are delivered to projects through the repository, install them on your
-machine by copying them over your user skills, from the root of a current checkout of habze:
+2. **As copied files.** The small per-project files (the two caller workflows, `renovate.json`,
+   `release-please-config.json`, `.release-please-manifest.json`, a `Directory.Build.props`
+   snippet) live in [`templates/dotnet/`](templates/dotnet) and [`templates/node/`](templates/node).
 
-```bash
-cp -r skills/session skills/session-reserve skills/session-full ~/.claude/skills/
-```
+## Adopting it in a repository
 
-Copy again after the skills change on `main`; never edit the installed copies.
-`session-reserve` and `session-full` read usage through the `claude` CLI, so it must be logged in on
-that machine (`claude auth status`; `claude auth login` if not) — the desktop app's own login does
-not count.
+Use the Claude Code skill [`skills/adopt-versioning`](skills/adopt-versioning/SKILL.md) ("adopt
+habze in this repo"). It detects the stack, sets the single version source and the starting
+version, copies the templates, opens a PR, and changes repository settings only after asking.
 
-## The conformance check
+For Claude Code itself: paste [`claude/CLAUDE-section.md`](claude/CLAUDE-section.md) into
+`~/.claude/CLAUDE.md`, and install the commit-message hook from [`claude/hooks/`](claude/hooks).
 
-[`tools/conformance.sh`](tools/conformance.sh) says whether one repository follows the standard. It
-checks every requirement of `STANDARD.md`, prints a line for each with the fix for each failure, and
-exits non-zero when any fails:
+## What `@v1` means and how updates arrive
 
-```bash
-bash tools/conformance.sh owner/name
-```
+- `v1` always points at the newest `1.x.y` release of habze. A compatible change (new option,
+  fix, clearer rule) is released as `1.x`, and every project picks it up on its next workflow run
+  or Renovate run, with no PR.
+- A breaking change is released as `2.0.0` with a new tag `v2`. Renovate opens a PR in each
+  project to move `@v1` → `@v2` (workflows and preset); it is a major update, so it is never
+  automerged. Read habze's release notes before merging it.
 
-It needs only `gh`, logged in with the `repo` and `read:project` scopes (`gh auth refresh -s
-read:project`), and runs in bash on Linux and in Git Bash on Windows. It checks a project against
-the version of the standard its `CLAUDE.md` names. A3 (whose words an agent obeys) is reviewed by
-hand; A1 and A2 print the eligible issues in order, the first being the next task.
-
-## Status
-
-The standard is written, the skills are in habze, and the conformance check exists; delivering the
-skills to projects and the `adopt-standard` skill are not done yet. See
-[docs/SPEC.md](docs/SPEC.md), [docs/ROADMAP.md](docs/ROADMAP.md) and the
-[board](https://github.com/users/shoraLBRT/projects/5).
+habze versions itself with the same tools: its own PR-title check, release-please, and a job
+that moves `v1` to every new release.

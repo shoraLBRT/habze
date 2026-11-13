@@ -1,0 +1,14 @@
+# habze checks its own PR titles with its own reusable workflow (at the same commit).
+name: PR title
+
+on:
+  pull_request:
+    types: [opened, edited, synchronize, reopened]
+  workflow_dispatch:
+
+permissions:
+  pull-requests: read
+
+jobs:
+  pr-title:
+    uses: ./.github/workflows/pr-title.yml

@@ -1,0 +1,86 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "description": "habze: dependency updates as Conventional Commits; non-major updates of stable (>= 1.0) packages automerge, majors and 0.x wait for a human. See STANDARD.md.",
+  "extends": [
+    "config:recommended",
+    ":semanticCommits"
+  ],
+  "platformAutomerge": true,
+  "automergeType": "pr",
+  "automergeStrategy": "squash",
+  "packageRules": [
+    {
+      "description": "NuGet packages ship with the app: fix(deps), which releases a patch.",
+      "matchManagers": ["nuget"],
+      "semanticCommitType": "fix"
+    },
+    {
+      "description": "Packages of test projects are not shipped: chore(deps).",
+      "matchManagers": ["nuget"],
+      "matchFileNames": ["**/*.Tests.csproj", "**/*.Tests/**", "**/*.Test.csproj", "**/*.Test/**"],
+      "semanticCommitType": "chore"
+    },
+    {
+      "description": "Test, analyzer and coverage packages are chore(deps) even when versioned centrally.",
+      "matchManagers": ["nuget"],
+      "matchPackageNames": [
+        "Microsoft.NET.Test.Sdk",
+        "xunit",
+        "xunit.*",
+        "NUnit*",
+        "MSTest*",
+        "coverlet.*",
+        "Moq",
+        "NSubstitute*",
+        "FakeItEasy*",
+        "FluentAssertions*",
+        "AwesomeAssertions*",
+        "Shouldly",
+        "AutoFixture*",
+        "Bogus",
+        "bunit*",
+        "Verify*",
+        "Testcontainers*",
+        "Microsoft.AspNetCore.Mvc.Testing",
+        "Microsoft.CodeAnalysis.*Analyzers",
+        "StyleCop.Analyzers*",
+        "Roslynator.*",
+        "SonarAnalyzer.CSharp"
+      ],
+      "semanticCommitType": "chore"
+    },
+    {
+      "description": "GitHub Actions, including habze's own reusable workflows, are CI: chore(deps).",
+      "matchManagers": ["github-actions", "renovate-config"],
+      "semanticCommitType": "chore"
+    },
+    {
+      "description": "One PR for all non-major GitHub Actions updates.",
+      "matchManagers": ["github-actions"],
+      "matchUpdateTypes": ["minor", "patch", "digest", "pin", "pinDigest"],
+      "groupName": "GitHub Actions"
+    },
+    {
+      "description": "One PR for all non-major npm devDependencies.",
+      "matchManagers": ["npm"],
+      "matchDepTypes": ["devDependencies"],
+      "matchUpdateTypes": ["minor", "patch"],
+      "groupName": "npm dev dependencies"
+    },
+    {
+      "description": "Automerge everything that is not a major update.",
+      "matchUpdateTypes": ["minor", "patch", "digest", "pin", "pinDigest", "lockFileMaintenance"],
+      "automerge": true
+    },
+    {
+      "description": "No automerge for packages still at 0.x: any release may break.",
+      "matchCurrentVersion": "/^v?0\\./",
+      "automerge": false
+    },
+    {
+      "description": "Majors (including habze @v1 -> @v2) always wait for a human.",
+      "matchUpdateTypes": ["major"],
+      "automerge": false
+    }
+  ]
+}
