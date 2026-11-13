@@ -1,0 +1,19 @@
+# habze releases itself with its own reusable workflow and moves the floating major tag (v1).
+name: Release
+
+on:
+  push:
+    branches: [main]
+
+permissions:
+  contents: write
+  pull-requests: write
+  issues: write
+  actions: write
+
+jobs:
+  release:
+    uses: ./.github/workflows/release.yml
+    with:
+      dispatch-workflows: ci.yml self-pr-title.yml
+      update-major-tag: true

@@ -1,11 +1,12 @@
-# Runs the checks listed under "Verification" in docs/PROJECT_STATE.md.
+# habze's own CI. The job id/name must stay `docs`: main's branch protection requires a check
+# named `docs`. `workflow_dispatch` lets the release workflow run it on the Release PR.
 name: CI
 
 on:
   pull_request:
-    branches: [main]
   push:
     branches: [main]
+  workflow_dispatch:
 
 permissions:
   contents: read
@@ -15,13 +16,37 @@ jobs:
     name: docs
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - uses: actions/checkout@v7
+
+      - uses: actions/setup-node@v7
         with:
-          node-version: 22
-      - name: Markdown lint
-        run: npx --yes markdownlint-cli2@0.23.3
-      - name: Link check
+          node-version: 24
+
+      - name: actionlint (workflows and templates)
+        uses: raven-actions/actionlint@v2
+        with:
+          version: 1.7.12
+          files: .github/workflows/*.yml, templates/*/.github/workflows/*.yml
+
+      - name: JSON files parse
+        run: |
+          git ls-files -z -- '*.json' | node -e '
+            const fs = require("node:fs");
+            const files = fs.readFileSync(0, "utf8").split("\0").filter(Boolean);
+            let bad = 0;
+            for (const f of files) {
+              try { JSON.parse(fs.readFileSync(f, "utf8")); console.log(`ok  ${f}`); }
+              catch (e) { bad++; console.log(`::error file=${f}::${e.message}`); }
+            }
+            process.exit(bad ? 1 : 0);'
+
+      - name: Renovate config validates
         run: >-
-          git ls-files -z '*.md'
-          | xargs -0 -n1 npx --yes markdown-link-check@3.15.0 -q -c .markdown-link-check.json
+          npx --yes --package renovate@44.239.1 -- renovate-config-validator --strict --no-global
+          renovate.json renovate/default.json templates/dotnet/renovate.json templates/node/renovate.json
+
+      - name: Markdown lint
+        run: npx --yes markdownlint-cli2@0.24.1
+
+      - name: Commit-message hook tests
+        run: node --test claude/hooks/conventional-commit.test.mjs

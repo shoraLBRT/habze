@@ -1,4 +1,4 @@
-// Markdown lint for habze's documents and skills; CI runs it (.github/workflows/ci.yml).
+// Markdown lint for habze's documents; CI runs it (.github/workflows/ci.yml).
 {
   "config": {
     "default": true,
@@ -6,5 +6,6 @@
     "MD013": { "line_length": 100, "tables": false, "code_blocks": false, "headings": false }
   },
   "globs": ["**/*.md"],
-  "ignores": ["node_modules/**", ".claude/**"]
+  // CHANGELOG.md is written by release-please.
+  "ignores": ["node_modules/**", ".claude/**", "CHANGELOG.md"]
 }
