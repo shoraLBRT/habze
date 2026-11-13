@@ -2,8 +2,8 @@
 # merges the title becomes the commit on the default branch, so this is the check that matters.
 #
 # Caller: `uses: shoraLBRT/habze/.github/workflows/pr-title.yml@v1`, triggered by `pull_request`
-# (opened, edited, synchronize, reopened) and `workflow_dispatch`. On `workflow_dispatch` (how the
-# release workflow runs checks on release-please's PR) it checks the open PR of the current branch.
+# (opened, edited, synchronize, reopened). Run by hand (`workflow_dispatch` in the caller), it checks
+# the open PR of the current branch.
 name: PR title
 
 on:

@@ -1,12 +1,11 @@
 # habze's own CI. The job id/name must stay `docs`: main's branch protection requires a check
-# named `docs`. `workflow_dispatch` lets the release workflow run it on the Release PR.
+# named `docs`.
 name: CI
 
 on:
   pull_request:
   push:
     branches: [main]
-  workflow_dispatch:
 
 permissions:
   contents: read

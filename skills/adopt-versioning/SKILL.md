@@ -3,8 +3,8 @@ name: adopt-versioning
 description: >-
   Bring one repository onto the habze standard for commits and versioning, end to end: detect the
   stack (.NET or Node), set the single version source and the starting version, copy habze's
-  templates (PR-title check, release-please, Renovate), make CI dispatchable, open a PR, and
-  change repository settings only after asking. Use when asked to "adopt habze", "set up
+  templates (PR-title check, release-please, Renovate), open a PR, and change repository
+  settings only after asking. Use when asked to "adopt habze", "set up
   versioning/commits in this repo", "add release-please / conventional commits / semantic
   versioning here", or "bring this project onto the standard". Never merges.
 ---
@@ -68,17 +68,15 @@ node -p "require('./package.json').version"   # node
    - an existing Renovate config (`renovate.json`, `.github/renovate.json`, `renovate.json5`,
      `.renovaterc*`): add `github>shoraLBRT/habze//renovate/default#v1` to `extends`, keep the
      project's own rules, drop settings the preset already covers.
-3. **Make the required checks dispatchable.** List them:
+3. **CI must run on `pull_request` to the default branch** (the Release PR's checks are
+   approval-required `pull_request` runs that `release.yml` approves). List the required checks
+   and make sure each comes from a `pull_request`-triggered workflow:
 
    ```sh
    gh api repos/<owner>/<repo>/branches/<default>/protection --jq '.required_status_checks.contexts'
    gh api repos/<owner>/<repo>/rules/branches/<default>
    ```
 
-   Add `workflow_dispatch:` to the `on:` of every workflow that produces one of them (and of the
-   main CI workflow if nothing is required yet), and set `dispatch-workflows` in `release.yml` to
-   those file names plus `pr-title.yml`. A CI job gated on `github.event_name == 'pull_request'`
-   must also accept `workflow_dispatch`.
 4. **Version display (recommended, keep it small):** if the app has a `--version`, an About
    screen or a startup log line, make it show the full version (.NET `InformationalVersion`, which
    carries `+<sha>`). Otherwise mention it in the PR as a follow-up.
@@ -96,8 +94,12 @@ Never report a check that did not run.
 
 Commit and push, then open the PR with a conventional title, for example
 `ci: adopt the habze commits and versioning standard`. The body lists: the stack and release
-type, the starting version and why, `bootstrap-sha`, the workflows given `workflow_dispatch`,
-removed per-project version properties, and the pending settings from step 6. Do not merge it.
+type, the starting version and why, `bootstrap-sha`, removed per-project version properties,
+and the pending settings from step 6. Do not merge it.
+
+**The settings of step 6 must be in place before this PR is merged, and it must be
+squash-merged.** release-please reads only first-parent commits; a `Merge pull request #N`
+commit is unparseable and its work never reaches a release (this happened to habze itself).
 
 ## 6. Repository settings: only after asking
 

@@ -90,15 +90,18 @@ Repository settings (applied by the adopt skill, only after the owner agrees):
 - History before adoption is ignored: `bootstrap-sha` in `release-please-config.json` is the
   commit the standard was adopted at, and `.release-please-manifest.json` holds the starting
   version.
-- **Required checks on the Release PR.** A PR opened with `GITHUB_TOKEN` triggers no
-  `pull_request` workflows, so its required checks would never run. habze's `release.yml`
-  therefore starts the project's checks itself with `workflow_dispatch` on the release branch
-  (input `dispatch-workflows`, default `ci.yml pr-title.yml`). Every workflow that provides a
-  required check needs a `workflow_dispatch:` trigger.
+- **Required checks on the Release PR.** The Release PR is opened with `GITHUB_TOKEN`, so GitHub
+  creates its `pull_request` runs in an *approval-required* state
+  ([changelog, 2026-06-11](https://github.blog/changelog/2026-06-11-bot-created-pull-requests-can-run-workflows-if-approved/)).
+  habze's `release.yml` approves exactly those runs (event `pull_request`, the release branch,
+  its head commit, triggered by `github-actions[bot]`) right after release-please updates the PR.
+  If approving is refused, the run leaves a warning and the owner presses **Approve workflows to
+  run** on the PR. Runs started with `workflow_dispatch` do not count: GitHub does not attach
+  them to the PR's required checks.
   - Fallback, not implemented: run release-please with a GitHub App installation token
-    (`actions/create-github-app-token`) instead of `GITHUB_TOKEN`; PRs it opens trigger
-    `pull_request` normally. It costs an App plus two secrets per repository (or organisation),
-    and `release.yml` would need a `token` secret input. Switch only if dispatching stops working.
+    (`actions/create-github-app-token`) instead of `GITHUB_TOKEN`; PRs it opens run their
+    checks without approval. It costs an App plus two secrets per repository, and `release.yml`
+    would need a `token` secret input.
 
 ### One source of the version
 
