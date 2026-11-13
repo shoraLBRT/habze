@@ -29,16 +29,7 @@ jobs:
           files: .github/workflows/*.yml, templates/*/.github/workflows/*.yml
 
       - name: JSON files parse
-        run: |
-          git ls-files -z -- '*.json' | node -e '
-            const fs = require("node:fs");
-            const files = fs.readFileSync(0, "utf8").split("\0").filter(Boolean);
-            let bad = 0;
-            for (const f of files) {
-              try { JSON.parse(fs.readFileSync(f, "utf8")); console.log(`ok  ${f}`); }
-              catch (e) { bad++; console.log(`::error file=${f}::${e.message}`); }
-            }
-            process.exit(bad ? 1 : 0);'
+        run: node tools/check-json.mjs
 
       - name: Renovate config validates
         run: >-

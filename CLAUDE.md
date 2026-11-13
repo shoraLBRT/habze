@@ -32,4 +32,5 @@ npx --yes --package renovate@44.239.1 -- renovate-config-validator --strict --no
 actionlint .github/workflows/*.yml templates/*/.github/workflows/*.yml
 ```
 
-plus a parse of every tracked `*.json`. The Renovate validator needs Node 24.
+plus `node tools/check-json.mjs` (parses every tracked `*.json`). The Renovate validator needs
+Node 24.

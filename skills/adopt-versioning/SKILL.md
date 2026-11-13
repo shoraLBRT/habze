@@ -108,9 +108,13 @@ only what they approve, then read the settings back and report them.
 gh api -X PATCH repos/<owner>/<repo> -F allow_squash_merge=true -F allow_merge_commit=false \
   -F allow_rebase_merge=false -f squash_merge_commit_title=PR_TITLE \
   -f squash_merge_commit_message=PR_BODY -F delete_branch_on_merge=true -F allow_auto_merge=true
+current=$(gh api repos/<owner>/<repo>/actions/permissions/workflow --jq .default_workflow_permissions)
 gh api -X PUT repos/<owner>/<repo>/actions/permissions/workflow \
-  -f default_workflow_permissions=read -F can_approve_pull_request_reviews=true
+  -f default_workflow_permissions="$current" -F can_approve_pull_request_reviews=true
 ```
+
+The second call keeps the repository's current default token permissions and only turns on
+"Allow GitHub Actions to create and approve pull requests".
 
 - Required check `pr-title / check` on the default branch:
   - classic protection exists → `echo '{"contexts":["pr-title / check"]}' | gh api -X POST
