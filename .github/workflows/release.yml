@@ -2,10 +2,11 @@
 #
 # - Opens/updates the Release PR (version bump + CHANGELOG) from Conventional Commits.
 # - Merging that PR creates the tag vX.Y.Z and the GitHub Release; outputs say so.
-# - A PR opened or updated with GITHUB_TOKEN does not trigger `pull_request` workflows, so the
-#   required checks would never run on the Release PR. After release-please touches its PR, this
-#   workflow starts the listed workflows with `workflow_dispatch` on the release branch (allowed
-#   for GITHUB_TOKEN); their check runs land on the PR's head commit.
+# - The Release PR is opened with GITHUB_TOKEN, so GitHub creates its `pull_request` runs in an
+#   approval-required state (GitHub changelog 2026-06-11). After release-please touches its PR,
+#   this workflow approves exactly those runs: event `pull_request`, the release branch, its head
+#   commit, triggered by github-actions[bot]. If the token may not approve, it leaves a warning
+#   and the owner presses "Approve workflows to run" on the PR.
 # - Optionally moves a floating major tag (v1) to each new release (habze itself uses this).
 #
 # Caller needs: on push to the default branch; permissions contents/pull-requests/issues/actions:
@@ -26,14 +27,11 @@ on:
         type: string
         required: false
         default: .release-please-manifest.json
-      dispatch-workflows:
-        description: >-
-          Workflow files to run on the Release PR branch whenever release-please creates or updates
-          it, separated by spaces or newlines. Each needs a `workflow_dispatch` trigger. List every
-          workflow that provides a required check. Empty disables it.
-        type: string
+      approve-checks:
+        description: Approve the approval-required `pull_request` runs on the Release PR.
+        type: boolean
         required: false
-        default: ci.yml pr-title.yml
+        default: true
       update-major-tag:
         description: Move the floating major tag (e.g. v1) to every new release.
         type: boolean
@@ -81,19 +79,45 @@ jobs:
           config-file: ${{ inputs.config-file }}
           manifest-file: ${{ inputs.manifest-file }}
 
-      - name: Run the required checks on the Release PR
-        if: steps.release.outputs.prs_created == 'true' && inputs.dispatch-workflows != ''
+      - name: Approve the checks on the Release PR
+        if: inputs.approve-checks && steps.release.outputs.prs_created == 'true'
         env:
           GH_TOKEN: ${{ github.token }}
           REPO: ${{ github.repository }}
           PRS: ${{ steps.release.outputs.prs }}
-          WORKFLOWS: ${{ inputs.dispatch-workflows }}
         run: |
+          # GitHub creates the runs a few seconds after the push to the release branch: wait for
+          # them (up to ~2 minutes), then approve every one, twice over, to catch late ones.
           for branch in $(jq -r '.[].headBranchName' <<< "$PRS"); do
-            for workflow in $WORKFLOWS; do
-              echo "Dispatching $workflow on $branch"
-              gh workflow run "$workflow" --repo "$REPO" --ref "$branch"
+            sha="$(gh api "repos/${REPO}/branches/${branch}" --jq .commit.sha)"
+            pr="$(gh pr list --repo "$REPO" --head "$branch" --state open --json url --jq '.[0].url')"
+            echo "Release PR ${pr:-?}: branch ${branch}, head ${sha}"
+            approved=0 failed=0 quiet=0
+            for _ in $(seq 1 24); do
+              ids="$(gh api "repos/${REPO}/actions/runs?branch=${branch}&event=pull_request&status=action_required&head_sha=${sha}" \
+                --jq '.workflow_runs[] | select(.triggering_actor.login == "github-actions[bot]") | .id')"
+              if [ -z "$ids" ]; then
+                if [ "$approved" -gt 0 ] || [ "$failed" -gt 0 ]; then
+                  quiet=$((quiet + 1)); [ "$quiet" -ge 3 ] && break
+                fi
+                sleep 5; continue
+              fi
+              quiet=0
+              for id in $ids; do
+                if gh api --method POST "repos/${REPO}/actions/runs/${id}/approve" --silent; then
+                  echo "approved run ${id}"; approved=$((approved + 1))
+                else
+                  failed=$((failed + 1))
+                fi
+              done
+              [ "$failed" -gt 0 ] && break
+              sleep 5
             done
+            if [ "$failed" -gt 0 ]; then
+              echo "::warning::Could not approve the Release PR's checks; open ${pr:-the Release PR} and press 'Approve workflows to run'."
+            elif [ "$approved" -eq 0 ]; then
+              echo "::notice::No approval-required runs appeared on ${branch}; nothing to approve."
+            fi
           done
 
       - name: Move the floating major tag

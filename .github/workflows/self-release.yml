@@ -15,5 +15,4 @@ jobs:
   release:
     uses: ./.github/workflows/release.yml
     with:
-      dispatch-workflows: ci.yml self-pr-title.yml
       update-major-tag: true

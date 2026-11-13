@@ -5,7 +5,6 @@ name: PR title
 on:
   pull_request:
     types: [opened, edited, synchronize, reopened]
-  workflow_dispatch: # the release workflow runs this on release-please's PR
 
 permissions:
   pull-requests: read

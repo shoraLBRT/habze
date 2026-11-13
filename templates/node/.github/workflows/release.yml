@@ -1,6 +1,6 @@
 # From habze (templates/): release-please opens the Release PR (version + CHANGELOG); merging it
-# tags vX.Y.Z and publishes the GitHub Release. dispatch-workflows must list every workflow that
-# provides a required check; each needs a `workflow_dispatch` trigger.
+# tags vX.Y.Z and publishes the GitHub Release. The checks on the Release PR are approved by the
+# reusable workflow itself (GitHub holds runs on bot-opened PRs for approval).
 name: Release
 
 on:
@@ -16,8 +16,6 @@ permissions:
 jobs:
   release:
     uses: shoraLBRT/habze/.github/workflows/release.yml@v1
-    with:
-      dispatch-workflows: ci.yml pr-title.yml
 
   # Example: build and publish only when a release was created.
   # publish:
