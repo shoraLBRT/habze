@@ -63,6 +63,9 @@ behaviour users see is a `fix`; anything incompatible gets `!`.
 - **Squash merge only.** The squash commit title is the PR title, so **the PR title is what must
   be conventional**. A required check (`pr-title / check`, habze's reusable `pr-title.yml`)
   enforces it. Commits inside a branch are free-form.
+- Why not a merge commit: release-please reads only the default branch's own (first-parent)
+  commits. A merge commit's header is `Merge pull request #N ...`, which it cannot parse, so the
+  work it brings in never reaches a release. habze's own first merge showed exactly that.
 - One PR, one change: a PR that needs two types is two PRs.
 - Breaking changes say so in the title (`feat!: ...`) and explain the migration in the PR body.
 
