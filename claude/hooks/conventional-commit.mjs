@@ -157,10 +157,13 @@ export function tokenize(command, shell = 'bash') {
     if (c === '"') {
       startWord();
       i++;
-      while (i < s.length && s[i] !== '"') {
+      while (i < s.length) {
         const d = s[i];
+        if (d === '"') {
+          if (ps && s[i + 1] === '"') { word.text += '"'; i += 2; continue; } // "" is a literal "
+          break;
+        }
         if (ps && d === '`') { const e = s[i + 1]; word.text += e === 'n' ? '\n' : (e ?? ''); i += 2; continue; }
-        if (ps && d === '"' && s[i + 1] === '"') { word.text += '"'; i += 2; continue; }
         if (!ps && d === '\\' && '"\\$`\n'.includes(s[i + 1])) {
           if (s[i + 1] !== '\n') word.text += s[i + 1];
           i += 2;

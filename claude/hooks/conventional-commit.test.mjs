@@ -120,6 +120,8 @@ test('powershell: quotes, here-strings, escapes', () => {
   const ps = (c) => extractHeaders(c, 'powershell').map((f) => f.header);
   assert.deepEqual(ps('git commit -m "feat: x"'), ['feat: x']);
   assert.deepEqual(ps("git commit -m 'it''s fine'"), ["it's fine"]);
+  assert.deepEqual(ps('git commit -m "fix: say ""hi"""'), ['fix: say "hi"']);
+  assert.deepEqual(ps('git commit -m "fix: a""b" -m "body"'), ['fix: a"b']);
   assert.deepEqual(ps('git commit -m @\'\nfix: here-string\n\nbody $notExpanded\n\'@'), ['fix: here-string']);
   assert.deepEqual(ps('git commit -m @"\nfix: expandable\n"@'), ['fix: expandable']);
   assert.deepEqual(ps('git commit -m @"\n$title\n"@'), []);
