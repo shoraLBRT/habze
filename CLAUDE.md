@@ -13,6 +13,7 @@ projects. Start with [README.md](README.md) (how projects consume it) and
 - `templates/<stack>/`: files the adopt skill copies into a project.
 - `claude/`: the CLAUDE.md section, the commit-message hook and its tests.
 - `skills/adopt-versioning/SKILL.md`: brings a repository onto the standard.
+- `LICENSE`: MIT.
 
 ## Rules for changes here
 
