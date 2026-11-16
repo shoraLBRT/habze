@@ -26,7 +26,7 @@ projects. Start with [README.md](README.md) (how projects consume it) and
 
 ```sh
 npx --yes markdownlint-cli2@0.24.1
-node --test claude/hooks/conventional-commit.test.mjs
+node --test claude/hooks/conventional-commit.test.mjs tools/pr-title.test.mjs
 npx --yes --package renovate@44.239.1 -- renovate-config-validator --strict --no-global \
   renovate.json renovate/default.json templates/dotnet/renovate.json templates/node/renovate.json
 actionlint .github/workflows/*.yml templates/*/.github/workflows/*.yml

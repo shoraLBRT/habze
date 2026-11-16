@@ -38,5 +38,5 @@ jobs:
       - name: Markdown lint
         run: npx --yes markdownlint-cli2@0.24.1
 
-      - name: Commit-message hook tests
-        run: node --test claude/hooks/conventional-commit.test.mjs
+      - name: Commit-message hook and PR-title rule tests
+        run: node --test claude/hooks/conventional-commit.test.mjs tools/pr-title.test.mjs
