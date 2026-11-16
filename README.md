@@ -51,3 +51,7 @@ For Claude Code itself: paste [`claude/CLAUDE-section.md`](claude/CLAUDE-section
 
 habze versions itself with the same tools: its own PR-title check, release-please, and a job
 that moves `v1` to every new release.
+
+## License
+
+[MIT](LICENSE).
