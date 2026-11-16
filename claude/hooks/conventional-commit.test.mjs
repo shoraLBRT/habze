@@ -130,6 +130,74 @@ test('powershell: quotes, here-strings, escapes', () => {
   assert.deepEqual(ps('gh pr create --title "chore: tidy" --body @\'\nline\n\'@'), ['chore: tidy']);
 });
 
+test('length counts characters, not bytes; Cyrillic in every Unicode block is caught', () => {
+  assert.equal(validateHeader(`fix: ${'é'.repeat(95)}`), null);
+  assert.equal(validateHeader(`fix: ${'😀'.repeat(95)}`), null); // astral: one character each
+  assert.match(validateHeader(`fix: ${'😀'.repeat(96)}`), /101 characters/);
+  for (const ch of ['ѐ', 'ԯ', 'ᲀ', 'ⷠ', 'Ꙁ']) {
+    assert.match(validateHeader(`fix: a ${ch} b`), /Cyrillic/, ch);
+  }
+});
+
+test('bash: more option shapes of git commit', () => {
+  const h = (c) => extractHeaders(c).map((f) => f.header);
+  assert.deepEqual(h('git commit --message "fix: spaced"'), ['fix: spaced']);
+  assert.deepEqual(h('git commit -sm "fix: signed off"'), ['fix: signed off']);
+  assert.deepEqual(h('git commit -a -m "fix: separate"'), ['fix: separate']);
+  assert.deepEqual(h('git -c user.name=x commit -m "fix: config"'), ['fix: config']);
+  assert.deepEqual(h('git --no-pager commit -m "fix: global flag"'), ['fix: global flag']);
+  assert.deepEqual(h("git commit -m $'fix: ansi\\n\\nbody'"), ['fix: ansi']);
+  assert.deepEqual(h('git commit \\\n  -m "fix: continued"'), ['fix: continued']);
+  assert.deepEqual(h('false || git commit -m "fix: after or"'), ['fix: after or']);
+  assert.deepEqual(h('env FOO=1 sudo git commit -m "fix: prefixed"'), ['fix: prefixed']);
+  assert.deepEqual(h('/usr/bin/git commit -m "fix: full path"'), ['fix: full path']);
+  assert.deepEqual(h('git commit -m "first\nsecond"'), ['first']);
+  assert.deepEqual(h('git commit -m "\n\nfix: leading blank lines"'), ['fix: leading blank lines']);
+});
+
+test('bash: unparseable or non-inline forms stay allowed', () => {
+  for (const cmd of [
+    'git commit -m `date`',
+    'git commit --message="$MSG"',
+    'git commit -Fmsg.txt',
+    'git commit --reuse-message=HEAD',
+    'git commit --squash=HEAD',
+    'git commit --template=tpl.txt',
+    'git commit -- -m',
+    'git commit -m',
+  ]) {
+    assert.deepEqual(extractHeaders(cmd), [], cmd);
+  }
+});
+
+test('several commands: every header is checked', () => {
+  const cmd = 'git commit -m "fix: good" && gh pr create --title "bad title"';
+  assert.deepEqual(extractHeaders(cmd).map((f) => f.header), ['fix: good', 'bad title']);
+  const message = checkCommand(cmd);
+  assert.match(message, /gh pr create --title: "bad title"/);
+  assert.doesNotMatch(message, /fix: good/);
+});
+
+test('gh: other subcommands and dynamic titles are allowed', () => {
+  for (const cmd of [
+    'gh pr create --title "$TITLE"',
+    'gh pr merge 12 --squash',
+    'gh issue create --title "anything"',
+    'gh pr edit 12 --body "no title change"',
+  ]) {
+    assert.deepEqual(extractHeaders(cmd), [], cmd);
+  }
+  assert.equal(extractHeaders('gh.exe pr edit 3 -t"fix: glued"')[0].header, 'fix: glued');
+});
+
+test('powershell: backtick continuation, call operator with path', () => {
+  const ps = (c) => extractHeaders(c, 'powershell').map((f) => f.header);
+  assert.deepEqual(ps('git commit `\n  -m "fix: continued"'), ['fix: continued']);
+  assert.deepEqual(ps('& "C:\\Program Files\\Git\\cmd\\git.exe" commit -m "fix: path"'), ['fix: path']);
+  assert.deepEqual(ps('git commit -m "fix: $($x.Title)"'), []);
+  assert.deepEqual(ps('git commit -m "fix: a`nbody"'), ['fix: a']);
+});
+
 test('hook process: exit codes and stderr', () => {
   const ok = runHook({ tool_name: 'Bash', tool_input: { command: 'git commit -m "feat: ok"' } });
   assert.equal(ok.status, 0);
