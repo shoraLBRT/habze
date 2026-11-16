@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.0.1](https://github.com/shoraLBRT/habze/compare/v1.0.0...v1.0.1) (2026-11-16)
+
+
+### Bug Fixes
+
+* **hook:** read doubled quotes inside PowerShell double-quoted strings ([#31](https://github.com/shoraLBRT/habze/issues/31)) ([2cbcc78](https://github.com/shoraLBRT/habze/commit/2cbcc786613a1b09bd50ffa9ed732e52218e7ee0))
+
 ## 1.0.0 (2026-11-13)
 
 
